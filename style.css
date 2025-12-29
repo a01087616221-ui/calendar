@@ -1,0 +1,7 @@
+body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; padding: 20px; }
+#app { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+h2 { color: #d32f2f; text-align: center; }
+input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+button { width: 100%; padding: 10px; background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px; }
+button:hover { background: #b71c1c; }
+.memo-item { background: #fff8e1; padding: 10px; border-left: 5px solid #ffc107; margin-bottom: 10px; font-size: 0.9em; }
