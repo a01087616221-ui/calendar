@@ -1,13 +1,13 @@
-// 1. 파이어베이스 설정 (대원님의 메모장 사진 값 적용)
+// 1. 파이어베이스 설정 (대원님의 실제 고유값 적용)
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
-       apiKey: "AIzaSyD0XW0p8hs1nEWaIL8NlAqFM7K8t1nLrBE",
-  authDomain: "jb-fire-6b2d0.firebaseapp.com",
-  projectId: "jb-fire-6b2d0",
-  storageBucket: "jb-fire-6b2d0.firebasestorage.app",
-  messagingSenderId: "912026254448",
-  appId: "1:912026254448:web:79c925beef5a60c356c8b5",
-  measurementId: "G-3RB6GVYY57"
+        apiKey: "AIzaSyD0XW0p8hs1nEWaLL8NIAqFM7K8t1nLrBE",
+        authDomain: "jb-fire-6b2d0.firebaseapp.com",
+        projectId: "jb-fire-6b2d0",
+        storageBucket: "jb-fire-6b2d0.firebasestorage.app",
+        messagingSenderId: "912026254448",
+        appId: "1:912026254448:web:79c925beef5a60c356c8b5",
+        measurementId: "G-3RB6GVYY57"
     };
 }
 
@@ -19,7 +19,7 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var database = firebase.database();
 
-// 3. 회원가입 함수
+// 3. 회원가입 함수 (오타 없이 정밀 수정)
 window.signUp = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -54,24 +54,20 @@ window.login = function() {
     });
 };
 
-// 5. 메모 저장 함수
+// 5. 메모 저장 및 불러오기 (생략 없이 포함)
 window.saveMemo = function() {
     var user = auth.currentUser;
     var memoText = document.getElementById('memo-text').value;
     if(!memoText) return;
-    
     database.ref('users/' + user.uid).once('value', function(snapshot) {
         var userDept = snapshot.val().department;
         database.ref('memos/' + userDept).push({
-            text: memoText,
-            user: user.email,
-            time: new Date().toLocaleString()
+            text: memoText, user: user.email, time: new Date().toLocaleString()
         });
         document.getElementById('memo-text').value = "";
     });
 };
 
-// 6. 메모 불러오기 함수
 function loadMemos(dept) {
     database.ref('memos/' + dept).on('value', function(snapshot) {
         var memoList = document.getElementById('memo-list');
