@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소방 업무 공유 플랫폼</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h2>🚒 소방 부서별 업무 공유</h2>
+        
+        <div id="login-section">
+            <input type="email" id="email" placeholder="이메일">
+            <input type="password" id="password" placeholder="비밀번호">
+            <select id="department">
+                <option value="화재진압">화재진압팀</option>
+                <option value="구조대">구조대</option>
+                <option value="구급대">구급대</option>
+                <option value="행정">행정지원</option>
+            </select>
+            <button onclick="signUp()">회원가입</button>
+            <button onclick="login()">로그인</button>
+        </div>
+
+        <div id="main-section" style="display:none;">
+            <h3 id="welcome-msg"></h3>
+            <div class="memo-input">
+                <textarea id="memo-text" placeholder="공유할 업무 내용을 입력하세요..."></textarea>
+                <button onclick="saveMemo()">메모 등록</button>
+            </div>
+            <div id="memo-list">
+                </div>
+            <button onclick="logout()">로그아웃</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
