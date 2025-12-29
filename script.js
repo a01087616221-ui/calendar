@@ -1,84 +1,55 @@
-// 1. 파이어베이스 설정 (대원님의 메모장 사진 값 100% 적용)
-if (typeof firebaseConfig === 'undefined') {
-    var firebaseConfig = {
-        apiKey: "AIzaSyD0XW0p8hs1nEWaIL8NlAqFM7K8t1nLrBE",
-        authDomain: "jb-fire-6b2d0.firebaseapp.com",
-        projectId: "jb-fire-6b2d0",
-        storageBucket: "jb-fire-6b2d0.firebasestorage.app",
-        messagingSenderId: "912026254448",
-        appId: "1:912026254448:web:79c925beef5a60c356c8b5",
-        measurementId: "G-3RB6GVYY57"
-    };
+body {
+    font-family: 'Malgun Gothic', sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
 }
 
-// 2. 파이어베이스 초기화
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+#app {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-var auth = firebase.auth();
-var database = firebase.database();
+h2 {
+    color: #d32f2f;
+    text-align: center;
+}
 
-// 3. 회원가입 함수
-window.signUp = function() {
-    var email = document.getElementById('email').value;
-    var pw = document.getElementById('password').value;
-    var dept = document.getElementById('department').value;
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
 
-    if(!email || !pw) return alert("이메일과 비밀번호를 입력하세요.");
+button {
+    width: 100%;
+    padding: 10px;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
 
-    auth.createUserWithEmailAndPassword(email, pw).then(function(userCredential) {
-        database.ref('users/' + userCredential.user.uid).set({ department: dept });
-        alert("가입 성공! 이제 로그인 해주세요.");
-    }).catch(function(err) { 
-        alert("가입 오류: " + err.message); 
-    });
-};
+button:hover {
+    background: #b71c1c;
+}
 
-// 4. 로그인 함수
-window.login = function() {
-    var email = document.getElementById('email').value;
-    var pw = document.getElementById('password').value;
+#calendar {
+    margin: 20px 0;
+}
 
-    auth.signInWithEmailAndPassword(email, pw).then(function(userCredential) {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('main-section').style.display = 'block';
-        
-        database.ref('users/' + userCredential.user.uid).once('value', function(snapshot) {
-            var userDept = snapshot.val().department;
-            document.getElementById('welcome-msg').innerText = "소속: " + userDept;
-            loadMemos(userDept);
-        });
-    }).catch(function(err) { 
-        alert("로그인 오류: " + err.message); 
-    });
-};
-
-// 5. 메모 저장 함수
-window.saveMemo = function() {
-    var user = auth.currentUser;
-    var memoText = document.getElementById('memo-text').value;
-    if(!memoText) return;
-    
-    database.ref('users/' + user.uid).once('value', function(snapshot) {
-        var userDept = snapshot.val().department;
-        database.ref('memos/' + userDept).push({
-            text: memoText,
-            user: user.email,
-            time: new Date().toLocaleString()
-        });
-        document.getElementById('memo-text').value = "";
-    });
-};
-
-// 6. 메모 불러오기 함수
-function loadMemos(dept) {
-    database.ref('memos/' + dept).on('value', function(snapshot) {
-        var memoList = document.getElementById('memo-list');
-        memoList.innerHTML = "";
-        snapshot.forEach(function(child) {
-            var data = child.val();
-            memoList.innerHTML += '<div class="memo-item"><strong>' + data.user + '</strong> (' + data.time + ')<br>' + data.text + '</div>';
-        });
-    });
+.memo-item {
+    background: #fff8e1;
+    padding: 10px;
+    border-left: 5px solid #ffc107;
+    margin-bottom: 10px;
 }
