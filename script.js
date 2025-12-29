@@ -1,7 +1,8 @@
 // 중복 선언 방지를 위한 체크
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
-        apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC",
+        // 아래 apiKey를 끝까지 정확하게 복사해서 넣어야 합니다.
+        apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC", 
         authDomain: "jb-fire-6b2d0.firebaseapp.com",
         databaseURL: "https://jb-fire-6b2d0-default-rtdb.firebaseio.com",
         projectId: "jb-fire-6b2d0",
@@ -30,7 +31,10 @@ window.signUp = function() {
     auth.createUserWithEmailAndPassword(email, pw).then(function(userCredential) {
         database.ref('users/' + userCredential.user.uid).set({ department: dept });
         alert("가입 성공! 이제 로그인 해주세요.");
-    }).catch(function(err) { alert("가입 오류: " + err.message); });
+    }).catch(function(err) { 
+        console.error(err);
+        alert("가입 오류: " + err.message); 
+    });
 };
 
 // 로그인 함수
@@ -49,32 +53,3 @@ window.login = function() {
         });
     }).catch(function(err) { alert("로그인 오류: " + err.message); });
 };
-
-// 메모 저장 함수
-window.saveMemo = function() {
-    var user = auth.currentUser;
-    var memoText = document.getElementById('memo-text').value;
-    if(!memoText) return;
-    
-    database.ref('users/' + user.uid).once('value', function(snapshot) {
-        var userDept = snapshot.val().department;
-        database.ref('memos/' + userDept).push({
-            text: memoText,
-            user: user.email,
-            time: new Date().toLocaleString()
-        });
-        document.getElementById('memo-text').value = "";
-    });
-};
-
-// 메모 불러오기 함수
-function loadMemos(dept) {
-    database.ref('memos/' + dept).on('value', function(snapshot) {
-        var memoList = document.getElementById('memo-list');
-        memoList.innerHTML = "";
-        snapshot.forEach(function(child) {
-            var data = child.val();
-            memoList.innerHTML += '<div class="memo-item"><strong>' + data.user + '</strong> (' + data.time + ')<br>' + data.text + '</div>';
-        });
-    });
-}
