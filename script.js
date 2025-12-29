@@ -1,4 +1,4 @@
-// 중복 선언 방지를 위해 기존에 선언되었는지 확인
+// 중복 선언 방지를 위한 체크
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
         apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC",
@@ -11,7 +11,7 @@ if (typeof firebaseConfig === 'undefined') {
     };
 }
 
-// Firebase 초기화 (한 번만 실행되도록 체크)
+// Firebase 초기화
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -19,7 +19,7 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var database = firebase.database();
 
-// 버튼 클릭 시 브라우저가 함수를 찾을 수 있도록 window에 등록
+// 회원가입 함수
 window.signUp = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -33,6 +33,7 @@ window.signUp = function() {
     }).catch(function(err) { alert("가입 오류: " + err.message); });
 };
 
+// 로그인 함수
 window.login = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -49,6 +50,7 @@ window.login = function() {
     }).catch(function(err) { alert("로그인 오류: " + err.message); });
 };
 
+// 메모 저장 함수
 window.saveMemo = function() {
     var user = auth.currentUser;
     var memoText = document.getElementById('memo-text').value;
@@ -65,6 +67,7 @@ window.saveMemo = function() {
     });
 };
 
+// 메모 불러오기 함수
 function loadMemos(dept) {
     database.ref('memos/' + dept).on('value', function(snapshot) {
         var memoList = document.getElementById('memo-list');
