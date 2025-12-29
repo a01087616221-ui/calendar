@@ -1,8 +1,7 @@
-// 중복 선언 방지를 위한 체크
+// 1. Firebase 설정 (중복 선언 방지를 위해 var 사용 및 체크)
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
-        // 아래 apiKey를 끝까지 정확하게 복사해서 넣어야 합니다.
-        apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC", 
+        apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC",
         authDomain: "jb-fire-6b2d0.firebaseapp.com",
         databaseURL: "https://jb-fire-6b2d0-default-rtdb.firebaseio.com",
         projectId: "jb-fire-6b2d0",
@@ -12,7 +11,7 @@ if (typeof firebaseConfig === 'undefined') {
     };
 }
 
-// Firebase 초기화
+// 2. Firebase 초기화
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -20,7 +19,7 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var database = firebase.database();
 
-// 회원가입 함수
+// 3. 회원가입 기능 (버튼 연결을 위해 window 객체에 등록)
 window.signUp = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -29,15 +28,15 @@ window.signUp = function() {
     if(!email || !pw) return alert("이메일과 비밀번호를 입력하세요.");
 
     auth.createUserWithEmailAndPassword(email, pw).then(function(userCredential) {
+        // 사용자 정보에 부서 저장
         database.ref('users/' + userCredential.user.uid).set({ department: dept });
         alert("가입 성공! 이제 로그인 해주세요.");
     }).catch(function(err) { 
-        console.error(err);
         alert("가입 오류: " + err.message); 
     });
 };
 
-// 로그인 함수
+// 4. 로그인 기능
 window.login = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -51,5 +50,36 @@ window.login = function() {
             document.getElementById('welcome-msg').innerText = "소속: " + userDept;
             loadMemos(userDept);
         });
-    }).catch(function(err) { alert("로그인 오류: " + err.message); });
+    }).catch(function(err) { 
+        alert("로그인 오류: " + err.message); 
+    });
 };
+
+// 5. 메모 저장 기능
+window.saveMemo = function() {
+    var user = auth.currentUser;
+    var memoText = document.getElementById('memo-text').value;
+    if(!memoText) return;
+    
+    database.ref('users/' + user.uid).once('value', function(snapshot) {
+        var userDept = snapshot.val().department;
+        database.ref('memos/' + userDept).push({
+            text: memoText,
+            user: user.email,
+            time: new Date().toLocaleString()
+        });
+        document.getElementById('memo-text').value = "";
+    });
+};
+
+// 6. 메모 불러오기 기능
+function loadMemos(dept) {
+    database.ref('memos/' + dept).on('value', function(snapshot) {
+        var memoList = document.getElementById('memo-list');
+        memoList.innerHTML = "";
+        snapshot.forEach(function(child) {
+            var data = child.val();
+            memoList.innerHTML += '<div class="memo-item"><strong>' + data.user + '</strong> (' + data.time + ')<br>' + data.text + '</div>';
+        });
+    });
+}
