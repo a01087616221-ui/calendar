@@ -1,7 +1,7 @@
 // 1. 파이어베이스 설정 (대원님의 메모장 사진 값 100% 적용)
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
-        apiKey: "AIzaSyD0XW0p8hs1nEWall8N1AqFM7K8t1nLrBE",
+        apiKey: "AIzaSyD0XW0p8hs1nEWaIL8NlAqFM7K8t1nLrBE",
         authDomain: "jb-fire-6b2d0.firebaseapp.com",
         projectId: "jb-fire-6b2d0",
         storageBucket: "jb-fire-6b2d0.firebasestorage.app",
