@@ -1,16 +1,7 @@
-// 중복 선언 방지를 위해 var 사용 및 체크
+// 중복 선언 방지를 위해 기존에 선언되었는지 확인
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
-        apiKey: "AIzaSy...", // const firebaseConfig = {
-  apiKey: "AIzaSyD0XW0p8hs1nEWaIL8NlAqFM7K8t1nLrBE",
-  authDomain: "jb-fire-6b2d0.firebaseapp.com",
-  projectId: "jb-fire-6b2d0",
-  storageBucket: "jb-fire-6b2d0.firebasestorage.app",
-  messagingSenderId: "912026254448",
-  appId: "1:912026254448:web:79c925beef5a60c356c8b5",
-  measurementId: "G-3RB6GVYY57"
-};
-
+        apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC",
         authDomain: "jb-fire-6b2d0.firebaseapp.com",
         databaseURL: "https://jb-fire-6b2d0-default-rtdb.firebaseio.com",
         projectId: "jb-fire-6b2d0",
@@ -20,7 +11,7 @@ if (typeof firebaseConfig === 'undefined') {
     };
 }
 
-// Firebase 초기화 (한 번만 실행)
+// Firebase 초기화 (한 번만 실행되도록 체크)
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -28,7 +19,7 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var database = firebase.database();
 
-// 버튼 클릭 시 브라우저가 찾을 수 있도록 window에 직접 등록
+// 버튼 클릭 시 브라우저가 함수를 찾을 수 있도록 window에 등록
 window.signUp = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -57,3 +48,30 @@ window.login = function() {
         });
     }).catch(function(err) { alert("로그인 오류: " + err.message); });
 };
+
+window.saveMemo = function() {
+    var user = auth.currentUser;
+    var memoText = document.getElementById('memo-text').value;
+    if(!memoText) return;
+    
+    database.ref('users/' + user.uid).once('value', function(snapshot) {
+        var userDept = snapshot.val().department;
+        database.ref('memos/' + userDept).push({
+            text: memoText,
+            user: user.email,
+            time: new Date().toLocaleString()
+        });
+        document.getElementById('memo-text').value = "";
+    });
+};
+
+function loadMemos(dept) {
+    database.ref('memos/' + dept).on('value', function(snapshot) {
+        var memoList = document.getElementById('memo-list');
+        memoList.innerHTML = "";
+        snapshot.forEach(function(child) {
+            var data = child.val();
+            memoList.innerHTML += '<div class="memo-item"><strong>' + data.user + '</strong> (' + data.time + ')<br>' + data.text + '</div>';
+        });
+    });
+}
