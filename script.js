@@ -1,13 +1,13 @@
 // 1. 파이어베이스 설정 (대원님의 메모장 사진 값 적용)
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
-        apiKey: "AIzaSyD0XW0p8hs1nEWaLL8NIAqFM7K8t1nLrBE",
-        authDomain: "jb-fire-6b2d0.firebaseapp.com",
-        projectId: "jb-fire-6b2d0",
-        storageBucket: "jb-fire-6b2d0.firebasestorage.app",
-        messagingSenderId: "912026254448",
-        appId: "1:912026254448:web:79c925beef5a60c356c8b5",
-        measurementId: "G-3RB6GVYY57"
+       apiKey: "AIzaSyD0XW0p8hs1nEWaIL8NlAqFM7K8t1nLrBE",
+  authDomain: "jb-fire-6b2d0.firebaseapp.com",
+  projectId: "jb-fire-6b2d0",
+  storageBucket: "jb-fire-6b2d0.firebasestorage.app",
+  messagingSenderId: "912026254448",
+  appId: "1:912026254448:web:79c925beef5a60c356c8b5",
+  measurementId: "G-3RB6GVYY57"
     };
 }
 
