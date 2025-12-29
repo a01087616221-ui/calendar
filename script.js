@@ -1,4 +1,4 @@
-// 1. 파이어베이스 설정 (오타 수정 완료)
+// 1. 파이어베이스 설정 (오타 수정 및 대원님 고유값 적용)
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
         apiKey: "AIzaSyD0XW0p8hs1nEWaLL8NIAqFM7K8t1nLrBE",
