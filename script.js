@@ -1,4 +1,4 @@
-// 1. Firebase 설정 (중복 선언 방지를 위해 var 사용 및 체크)
+// 중복 선언 방지를 위해 var 사용 및 체크
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
         apiKey: "AIzaSyNXMeP8hSintwa1L8N7AqfM7K8tlhL-SC",
@@ -11,7 +11,7 @@ if (typeof firebaseConfig === 'undefined') {
     };
 }
 
-// 2. Firebase 초기화
+// Firebase 초기화
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -19,7 +19,7 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var database = firebase.database();
 
-// 3. 회원가입 기능 (버튼 연결을 위해 window 객체에 등록)
+// 회원가입 함수
 window.signUp = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -28,7 +28,6 @@ window.signUp = function() {
     if(!email || !pw) return alert("이메일과 비밀번호를 입력하세요.");
 
     auth.createUserWithEmailAndPassword(email, pw).then(function(userCredential) {
-        // 사용자 정보에 부서 저장
         database.ref('users/' + userCredential.user.uid).set({ department: dept });
         alert("가입 성공! 이제 로그인 해주세요.");
     }).catch(function(err) { 
@@ -36,7 +35,7 @@ window.signUp = function() {
     });
 };
 
-// 4. 로그인 기능
+// 로그인 함수
 window.login = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -50,12 +49,10 @@ window.login = function() {
             document.getElementById('welcome-msg').innerText = "소속: " + userDept;
             loadMemos(userDept);
         });
-    }).catch(function(err) { 
-        alert("로그인 오류: " + err.message); 
-    });
+    }).catch(function(err) { alert("로그인 오류: " + err.message); });
 };
 
-// 5. 메모 저장 기능
+// 메모 저장 함수
 window.saveMemo = function() {
     var user = auth.currentUser;
     var memoText = document.getElementById('memo-text').value;
@@ -72,7 +69,7 @@ window.saveMemo = function() {
     });
 };
 
-// 6. 메모 불러오기 기능
+// 메모 불러오기 함수
 function loadMemos(dept) {
     database.ref('memos/' + dept).on('value', function(snapshot) {
         var memoList = document.getElementById('memo-list');
