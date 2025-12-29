@@ -1,4 +1,4 @@
-// 1. 파이어베이스 설정 (대원님의 실제 고유값 적용)
+// 1. 파이어베이스 설정 (오타 수정 완료)
 if (typeof firebaseConfig === 'undefined') {
     var firebaseConfig = {
         apiKey: "AIzaSyD0XW0p8hs1nEWaLL8NIAqFM7K8t1nLrBE",
@@ -19,7 +19,7 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var database = firebase.database();
 
-// 3. 회원가입 함수 (오타 없이 정밀 수정)
+// 3. 회원가입 함수
 window.signUp = function() {
     var email = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
@@ -54,20 +54,24 @@ window.login = function() {
     });
 };
 
-// 5. 메모 저장 및 불러오기 (생략 없이 포함)
+// 5. 메모 저장 함수
 window.saveMemo = function() {
     var user = auth.currentUser;
     var memoText = document.getElementById('memo-text').value;
     if(!memoText) return;
+    
     database.ref('users/' + user.uid).once('value', function(snapshot) {
         var userDept = snapshot.val().department;
         database.ref('memos/' + userDept).push({
-            text: memoText, user: user.email, time: new Date().toLocaleString()
+            text: memoText,
+            user: user.email,
+            time: new Date().toLocaleString()
         });
         document.getElementById('memo-text').value = "";
     });
 };
 
+// 6. 메모 불러오기 함수
 function loadMemos(dept) {
     database.ref('memos/' + dept).on('value', function(snapshot) {
         var memoList = document.getElementById('memo-list');
