@@ -7,35 +7,41 @@ const firebaseConfig = {
   appId: "1:912026254448:web:79c925beef5a60c356c8b5",
   measurementId: "G-3RB6GVYY57"
 };
+
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSy...", 
+    authDomain: "jb-fire-6b2d0.firebaseapp.com",
+    databaseURL: "https://jb-fire-6b2d0-default-rtdb.firebaseio.com", // 본인 DB 주소 확인
+    projectId: "jb-fire-6b2d0",
+    storageBucket: "jb-fire-6b2d0.appspot.com",
+    messagingSenderId: "36531388654",
+    appId: "1:36531388654:web:9f8e4e7e974e6f9d9e4a3b"
 };
-firebase.initializeApp(firebaseConfig);
+
+// 2. 초기화 (이미 선언되었는지 확인 후 실행)
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 const auth = firebase.auth();
 const database = firebase.database();
 
-// 회원가입
-function signUp() {
+// 3. 회원가입 함수
+window.signUp = function() {
     const email = document.getElementById('email').value;
     const pw = document.getElementById('password').value;
     const dept = document.getElementById('department').value;
 
+    if(!email || !pw) return alert("이메일과 비밀번호를 입력하세요.");
+
     auth.createUserWithEmailAndPassword(email, pw).then((userCredential) => {
-        // 부서 정보 저장
         database.ref('users/' + userCredential.user.uid).set({ department: dept });
         alert("가입 성공! 이제 로그인 해주세요.");
-    }).catch(err => alert(err.message));
-}
+    }).catch(err => alert("가입 오류: " + err.message));
+};
 
-// 로그인 및 데이터 불러오기
-function login() {
+// 4. 로그인 함수
+window.login = function() {
     const email = document.getElementById('email').value;
     const pw = document.getElementById('password').value;
 
@@ -43,19 +49,19 @@ function login() {
         document.getElementById('login-section').style.display = 'none';
         document.getElementById('main-section').style.display = 'block';
         
-        // 부서 확인 후 메모 로드
         database.ref('users/' + userCredential.user.uid).once('value', (snapshot) => {
             const userDept = snapshot.val().department;
             document.getElementById('welcome-msg').innerText = `소속: ${userDept}`;
             loadMemos(userDept);
         });
-    }).catch(err => alert(err.message));
-}
+    }).catch(err => alert("로그인 오류: " + err.message));
+};
 
-// 메모 저장
-function saveMemo() {
+// 5. 메모 로드 및 저장 함수 등 나머지...
+window.saveMemo = function() {
     const user = auth.currentUser;
     const memoText = document.getElementById('memo-text').value;
+    if(!memoText) return;
     
     database.ref('users/' + user.uid).once('value', (snapshot) => {
         const userDept = snapshot.val().department;
@@ -66,9 +72,8 @@ function saveMemo() {
         });
         document.getElementById('memo-text').value = "";
     });
-}
+};
 
-// 부서 메모 실시간 로드
 function loadMemos(dept) {
     database.ref('memos/' + dept).on('value', (snapshot) => {
         const memoList = document.getElementById('memo-list');
